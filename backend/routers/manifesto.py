@@ -1,13 +1,9 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
 from config import get_config
 from services.manifesto import ManifestoService
+from models.manifesto import ManifestoRequest
 
 manifesto_router = APIRouter()
-
-class ManifestoRequest(BaseModel):
-    shop_domain: str
-    access_token: str
 
 @manifesto_router.post("/generate")
 async def generate_manifesto(
