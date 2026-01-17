@@ -4,12 +4,12 @@ from backboard import BackboardClient
 from typing import List
 
 class CompareManifestoService:
-    def __init__(self, summary: str, backboard_api_key: str):
+    def __init__(self, summary: str, backboard_api_key: str, client: BackboardClient = None):
         with open("MANIFESTO.md", "r") as f:
             self.manifesto = f.read()
         self.summary = summary
         self.backboard_api_key = backboard_api_key
-        self.backboard_client = BackboardClient(api_key=self.backboard_api_key)
+        self.backboard_client = client
 
     
     async def _generate_comparison_with_backboard(self, summary: str) -> str:
@@ -40,7 +40,8 @@ class CompareManifestoService:
                 content=prompt,
                 llm_provider="google",
                 model_name="gemini-2.5-flash",
-                stream=False    
+                memory="Auto",
+                stream=False
             )
 
             return response.content

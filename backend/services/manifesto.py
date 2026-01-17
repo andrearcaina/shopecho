@@ -4,14 +4,13 @@ from backboard import BackboardClient
 from typing import List
 
 class ManifestoService:
-    def __init__(self, shop: str, token: str, shopify_api_key: str, shopify_api_secret: str, backboard_api_key: str):
+    def __init__(self, shop: str, token: str, shopify_api_key: str, shopify_api_secret: str, client: BackboardClient = None):
         self.shop = shop
         self.token = token
         self.shopify_api_key = shopify_api_key
         self.shopify_api_secret = shopify_api_secret
-        self.backboard_api_key = backboard_api_key
-        self.backboard_client = BackboardClient(api_key=self.backboard_api_key)
-
+        self.backboard_client = client
+        
     async def create_manifesto(self):
         if self._check_manifesto_exists():
             return self.view_manifesto()

@@ -1,6 +1,7 @@
 # config.py or inside main.py
 import os
 from functools import lru_cache
+from backboard import BackboardClient
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,3 +14,7 @@ def get_config():
         "backboard_api_key": os.getenv("BACKBOARD_API_KEY"),
         "twelvelabs_api_key": os.getenv("TWELVELABS_API_KEY"),
     }
+
+@lru_cache()
+def get_backboard_client(): # caches client so we can have persistent memory (backboard)
+    return BackboardClient(get_config()["backboard_api_key"])

@@ -1,14 +1,16 @@
 from fastapi import APIRouter, Depends
-from config import get_config
+from config import get_config, get_backboard_client
 from services.manifesto import ManifestoService
 from models.manifesto import ManifestoRequest
+from backboard import BackboardClient
 
 manifesto_router = APIRouter()
 
 @manifesto_router.post("/generate")
 async def generate_manifesto(
     request: ManifestoRequest, 
-    settings: dict = Depends(get_config)
+    settings: dict = Depends(get_config),
+    client: BackboardClient = Depends(get_backboard_client)
 ):
     
     print("🚀 Generating manifesto...")
@@ -18,7 +20,7 @@ async def generate_manifesto(
         token=request.access_token,
         shopify_api_key=settings["shopify_api_key"],
         shopify_api_secret=settings["shopify_api_secret"],
-        backboard_api_key=settings["backboard_api_key"]
+        client=client
     )
     manifesto = await manifesto_service.create_manifesto()
 
