@@ -14,7 +14,6 @@ async def analyze_video(
     twelvelabs = TwelveLabsService(twelve_labs_api_key=settings["twelvelabs_api_key"])
     analysis_result = await twelvelabs.analyze_video(
         video_url=request.url,
-        prompt=request.prompt
     )
 
     return {"status": "success", "data": analysis_result}
