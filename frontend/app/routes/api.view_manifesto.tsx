@@ -33,7 +33,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     } catch (error) {
         console.error("Python Connection Failed:", error);
         return data({ 
-            status: "error", message: "Python Brain is offline" 
+            status: "error", message: "Failed to connect to Python service" 
         }, { 
             status: 500 
         });
