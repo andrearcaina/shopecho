@@ -2,6 +2,7 @@ import os
 import requests
 from backboard import BackboardClient
 from typing import List
+import time
 
 class ManifestoService:
     def __init__(self, shop: str, token: str, client: BackboardClient = None):
@@ -11,6 +12,8 @@ class ManifestoService:
 
     async def create_manifesto(self):
         if self._check_manifesto_exists():
+            time.sleep(3)
+
             return self.view_manifesto()
 
         print("Scanning store for data...")

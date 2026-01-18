@@ -28,7 +28,7 @@ class CampaignService:
             )
 
     async def generate_video_scripts(self) -> Dict:
-            time.sleep(5)
+            time.sleep(15)
 
             return {
                 "elevenlabs_video_file_paths": ["elevenlabs1.mp4", "elevenlabs2.mp4"],
