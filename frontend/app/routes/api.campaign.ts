@@ -1,35 +1,8 @@
-export enum CampaignChannel {
-    EMAIL = "EMAIL",
-    INSTAGRAM = "INSTAGRAM",
-    BLOG = "BLOG",
-}
-
-interface CampaignRequest {
-    campaign_goal: string;
-    channels: CampaignChannel[];
-}
-
-interface PublishRequest {
-    campaign_data: any;
-}
-
-/**
- * Creates a campaign draft by calling the Remix API route.
- */
-export async function createCampaignDraft(
-    goal: string,
-    channels: CampaignChannel[]
-) {
-    const payload: CampaignRequest = {
-        campaign_goal: goal,
-        channels,
-    };
-
+export async function createCampaignDraftVideo() {
     try {
-        const response = await fetch("/api/campaign/draft", {
+        const response = await fetch("/api/campaign/video", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -39,7 +12,7 @@ export async function createCampaignDraft(
 
         return await response.json();
     } catch (error) {
-        console.error("Failed to create campaign draft:", error);
+        console.error("Failed to create campaign draft video:", error);
         throw error;
     }
 }
@@ -47,18 +20,12 @@ export async function createCampaignDraft(
 /**
  * Publishes a campaign by calling the Remix API route.
  */
-export async function publishCampaign(
-    campaignData: any
-) {
-    const payload: PublishRequest = {
-        campaign_data: campaignData,
-    };
+export async function createCampaignDraftEmail() {
 
     try {
-        const response = await fetch("/api/campaign/publish", {
+        const response = await fetch("/api/campaign/email", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -68,7 +35,23 @@ export async function publishCampaign(
 
         return await response.json();
     } catch (error) {
-        console.error("Failed to publish campaign:", error);
+        console.error("Failed to create campaign draft email:", error);
+        throw error;
+    }
+}
+
+export async function getCampaignVideoFile(filePath: string) {
+    try {
+        const response = await fetch(`/api/campaign/video/${encodeURIComponent(filePath)}`, {
+            method: "GET",
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Remix API Error: ${errorText}`);
+        }
+        return await response.blob();
+    } catch (error) {
+        console.error("Failed to fetch campaign video file:", error);
         throw error;
     }
 }

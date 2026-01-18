@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "3047df44284a2a322c022d70f1651ac6"
-name = "ai agent system"
+name = "ShopEchoAI"
 application_url = "https://example.com"
 embedded = true
 

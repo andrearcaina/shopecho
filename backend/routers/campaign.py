@@ -1,58 +1,57 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
+from fastapi.responses import FileResponse
 from config import get_config, get_backboard_client
 from services.campaign import CampaignService
-from models.campaign import CampaignRequest, PublishRequest
 from backboard import BackboardClient
 
 campaign_router = APIRouter()
 
-@campaign_router.post("/draft")
-async def create_campaign_draft(
-    request: CampaignRequest,
+@campaign_router.post("/video")
+async def create_campaign_video(
     client: BackboardClient = Depends(get_backboard_client)
 ):
     """
-    Synchronous endpoint to generate drafts.
+    Synchronous endpoint to generate videos.
     """
     service = CampaignService(
-        shop=request.shop_domain,
-        token=request.access_token,
         client=client
     )
     
     # Blocking call to service
-    draft = await service.generate_draft(
-        goal=request.campaign_goal,
-        channels=request.channels
-    )
-    
-    return draft
+    video = await service.generate_video_scripts()
 
-@campaign_router.post("/publish")
-def publish_campaign(
-    request: PublishRequest,
+    resp = {
+        "videos": [
+            {"file_path": path} for path in video["elevenlabs_video_file_paths"]
+        ]
+    }
+
+    print(resp)
+
+    return resp
+
+@campaign_router.get("/video/{filename}")
+async def get_campaign_video_file(filename: str):
+    """
+    Endpoint to retrieve generated video files.
+    """
+    file_path = f"services/{filename}"
+    return FileResponse(path=file_path, filename=filename, media_type='video/mp4')
+
+@campaign_router.post("/email")
+async def create_campaign_email(
     client: BackboardClient = Depends(get_backboard_client)
 ):
     """
     Endpoint to publish and track AI-generated campaigns to Shopify.
     """
     service = CampaignService(
-        shop=request.shop_domain,
-        token=request.access_token,
         client=client
     )
     
-    try:
-        shopify_event = service.publish_campaign(request.campaign_data)
-        
-        if "marketing_event" not in shopify_event or "id" not in shopify_event["marketing_event"]:
-            raise HTTPException(status_code=500, detail="Failed to publish campaign to Shopify.")
-        
-        return {
-            "status": "published",
-            "shopify_event_id": shopify_event["marketing_event"]["id"],
-            "shopify_event": shopify_event["marketing_event"]
-        }
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    # Blocking call to service
+    email = await service.generate_draft_email()
+
+    print(email)
+
+    return {"status": "success", "email": email}

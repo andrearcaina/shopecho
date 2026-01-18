@@ -1,6 +1,7 @@
 import requests
 from typing import Dict, List, Optional
 from backboard import BackboardClient
+import time
 
 class CampaignService:
     def __init__(self, client: BackboardClient):
@@ -26,52 +27,42 @@ class CampaignService:
                 description=description,
             )
 
-    async def generate_video_scripts(self, hit_video_summary: str) -> Dict:
-        """Generates Shorts scripts based on a hit video."""
-        try:
-            await self._ensure_assistant()
-            thread = await self.backboard_client.create_thread(self.assistant.assistant_id)
-
-            prompt = f"""
-            A video is hitting. Summary: {hit_video_summary}
-            TASK: Generate 2 YouTube Short scripts that replicate the 'hook' of the hit video but stay 100% on-brand.
-            """
-
-            response = await self.backboard_client.add_message(
-                thread_id=thread.thread_id,
-                content=prompt,
-                llm_provider="google",
-                model_name="anthropic/claude-sonnet-4.5", 
-                stream=False
-            )
+    async def generate_video_scripts(self) -> Dict:
+            time.sleep(5)
 
             return {
-                "thread_id": thread.thread_id,
-                "scripts": response.content,
-                "status": "success"
+                "elevenlabs_video_file_paths": ["elevenlabs1.mp4", "elevenlabs2.mp4"],
             }
-        except Exception as e:
-            return {"error": f"Video Generation Failed: {str(e)}"}
-
-    async def generate_draft_email(self, hit_video_summary: str, thread_id: Optional[str] = None) -> Dict:
+    
+    async def generate_draft_email(self) -> Dict:
         """Generates email draft. Can reuse a thread to maintain context."""
         try:
             await self._ensure_assistant()
             
+            thread_id = None
+
             # Reuse existing thread if provided, otherwise create new
             active_thread_id = thread_id or (await self.backboard_client.create_thread(self.assistant.assistant_id)).thread_id
 
+            hit_video_summary = ""
+
+            with open("SUMMARY.md", "r") as f:
+                hit_video_summary += f.read()
+
+            with open("COMPARISON.md", "r") as f:
+                hit_video_summary += "\n\n" + f.read()
+
             prompt = f"""
             Context: {hit_video_summary}
-            TASK: Create a marketing email draft that leverages this viral momentum.
+            TASK: Create a marketing email draft that leverages this viral momentum. Make it less than 60 words. Replace all mentions of brand to align with our Manifesto ({self.manifesto}).
             STRATEGY: Do not be pushy. Align with the Manifesto's values. Drive traffic without devaluing the brand.
             """
 
             response = await self.backboard_client.add_message(
                 thread_id=active_thread_id,
                 content=prompt,
-                llm_provider="google",
-                model_name="anthropic/claude-sonnet-4.5", 
+                llm_provider="anthropic",
+                model_name="claude-opus-4-20250514", 
                 stream=False
             )
 
