@@ -16,4 +16,11 @@ async def analyze_video(
         video_url=request.url,
     )
 
+    # print(analysis_result)
+    try:
+        with open("ANALYSIS.md", "w") as f:
+            f.write(analysis_result)
+    except Exception as e:
+        print(f"File Write Error: {e}")
+
     return {"status": "success", "data": analysis_result}
