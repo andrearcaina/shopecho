@@ -16,14 +16,18 @@ Shopecho helps Shopify merchants:
 
 ## 🚀 Core Features
 
-### 🧠 Brand-Aware AI Agent
-An intelligent agent trained on your store’s:
+### 🧠 Brand-Aware Multi-Agent Workflow
+An intelligent multi-agent workflow that is trained on your store’s:
 
 - Brand voice & tone guidelines
 - Product catalog & descriptions
 - Store policies and FAQs
 
 This allows ShopEcho to respond, recommend, and generate content that *sounds like your brand*.
+
+Here is a high level overview of how our agentic workflow orchestrates:
+
+![Agent Workflow](docs/designs/images/agent-workflow.png)
 
 ---
 
@@ -35,10 +39,10 @@ This allows ShopEcho to respond, recommend, and generate content that *sounds li
 ---
 
 ### ✍️ AI-Powered Content & Marketing
-- Product descriptions
-- Marketing copy and campaigns
-- SEO-optimized brand-aligned content
-- Brand-safe AI responses for customer-facing use cases
+- AI generated video content (for inspiration, marketing, MVPs, etc)
+- AI generated marketing copy and campaigns
+- AI generated product descriptions
+- AI generated brand-safe responses for customer-facing use cases
 
 ---
 
@@ -47,8 +51,12 @@ This allows ShopEcho to respond, recommend, and generate content that *sounds li
 - Shopify App Framework
 - Shopify Remix + Polaris Web UI Framework
 - Python + FastAPI
-- LLMs (Backboard - Opus & Gemini, ElevenLabs, TwelveLabs)
-- Agentic orchestration patterns
+- LLMs (Backboard with Opus & Gemini, ElevenLabs, TwelveLabs)
+- Multi-agent orchestration patterns (see [docs/designs/images/agent-workflow.png](docs/designs/images/agent-workflow.png))
+
+Here is a high level diagram of the entire tech stack in action:
+
+![Tech Stack](docs/designs/images/hld.png)
 
 ---
 
